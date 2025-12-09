@@ -10,7 +10,8 @@ export const translations = {
       settings: "Configuration",
       archDump: "Données Techniques",
       latency: "Latence",
-      systemStatus: "SYSTÈME CENTRAL"
+      systemStatus: "SYSTÈME CENTRAL",
+      poweredBy: "Propulsé par Zakibelm © 2025"
     },
     dashboard: {
       title: "Centre de Commande",
@@ -83,7 +84,8 @@ export const translations = {
       settings: "System Config",
       archDump: "Tech Data",
       latency: "Latency",
-      systemStatus: "CORE SYSTEM"
+      systemStatus: "CORE SYSTEM",
+      poweredBy: "Powered by Zakibelm © 2025"
     },
     dashboard: {
       title: "Command Center",
@@ -156,7 +158,8 @@ export const translations = {
       settings: "الإعدادات",
       archDump: "بيانات تقنية",
       latency: "الكمون",
-      systemStatus: "النظام المركزي"
+      systemStatus: "النظام المركزي",
+      poweredBy: "بدعم من Zakibelm © 2025"
     },
     dashboard: {
       title: "مركز القيادة",

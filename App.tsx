@@ -13,7 +13,7 @@ import { processCampaignIntake } from './services/openRouterService';
 import { useLanguage } from './contexts/LanguageContext';
 
 const App = () => {
-  const { t } = useLanguage();
+  const { t, direction } = useLanguage();
   const [currentView, setCurrentView] = useState<ViewState>('dashboard');
   const [agents, setAgents] = useState(orchestrator.getAgents());
   const [logs, setLogs] = useState<LogEntry[]>([]);
@@ -149,7 +149,7 @@ const App = () => {
 
             {/* Quick Actions (CEO Input) */}
             <div className="bg-gradient-to-r from-nova-800 to-nova-900 border border-nova-700 rounded-xl p-6 mb-8 relative overflow-hidden group">
-               <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity"><Bot size={120} /></div>
+               <div className={`absolute top-0 ${direction === 'rtl' ? 'left-0' : 'right-0'} p-4 opacity-10 group-hover:opacity-20 transition-opacity`}><Bot size={120} /></div>
                <div className="relative z-10 max-w-2xl">
                   <h3 className="text-xl font-bold text-white mb-3 flex items-center gap-2">
                     <Cpu className="text-nova-purple" />
@@ -219,9 +219,9 @@ const App = () => {
   };
 
   return (
-    <div className="flex min-h-screen bg-nova-900 text-white font-sans selection:bg-nova-cyan selection:text-nova-900">
+    <div className={`flex min-h-screen bg-nova-900 text-white font-sans selection:bg-nova-cyan selection:text-nova-900 ${direction === 'rtl' ? 'font-cairo' : ''}`} dir={direction}>
       <Sidebar currentView={currentView} onViewChange={setCurrentView} />
-      <main className="ml-64 flex-1 h-screen relative">
+      <main className={`flex-1 h-screen relative transition-all duration-300 ${direction === 'rtl' ? 'mr-64' : 'ml-64'}`}>
         {renderContent()}
       </main>
     </div>

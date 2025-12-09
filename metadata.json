@@ -1,0 +1,5 @@
+{
+  "name": "Nova Media Command Center",
+  "description": "A futuristic dashboard for the Nova Media AI Agency, featuring agent orchestration, workflow visualization (EVV), and campaign management.",
+  "requestFramePermissions": []
+}

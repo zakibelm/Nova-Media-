@@ -1,41 +1,42 @@
+
 import React, { useState } from 'react';
-import { ArrowRight, CheckCircle, ShieldCheck, Zap, AlertCircle, GitMerge, Globe, RotateCcw } from 'lucide-react';
+import { ArrowRight, CheckCircle, ShieldCheck, Zap, AlertCircle, GitMerge, Globe, RotateCcw, ArrowLeft } from 'lucide-react';
 import { AgentDefinition } from '../types';
 import { WORKFLOW_DEFINITIONS } from '../constants';
+import { useLanguage } from '../contexts/LanguageContext';
 
 interface WorkflowMonitorProps {
   agents: AgentDefinition[];
 }
 
 const WorkflowMonitor: React.FC<WorkflowMonitorProps> = ({ agents }) => {
+  const { t, direction } = useLanguage();
   const [activeTab, setActiveTab] = useState<'global' | 'evv'>('global');
 
-  // Helper to find agent by role/name partially
-  const findAgent = (name: string) => agents.find(a => a.name.includes(name) || a.role.includes(name));
+  const ArrowIcon = direction === 'rtl' ? ArrowLeft : ArrowRight;
 
   const renderGlobalWorkflow = () => {
     return (
       <div className="space-y-4">
         <div className="flex items-center justify-between bg-nova-800 p-4 rounded-lg border border-nova-700">
            <h3 className="font-bold text-white flex items-center gap-2">
-             <Globe className="text-blue-400" /> Global Project Pipeline
+             <Globe className="text-blue-400" /> {t.workflow.title}
            </h3>
-           <span className="text-xs text-gray-400 font-mono">Module 4.2 Standard Flow</span>
         </div>
-        <div className="relative border-l-2 border-nova-700 ml-6 space-y-6 py-2">
+        <div className={`relative ${direction === 'rtl' ? 'border-r-2 mr-6' : 'border-l-2 ml-6'} border-nova-700 space-y-6 py-2`}>
           {WORKFLOW_DEFINITIONS.main_project_flow.map((step, idx) => (
-            <div key={idx} className="relative pl-8">
-              <div className="absolute -left-[9px] top-1 w-4 h-4 rounded-full bg-nova-900 border-2 border-nova-cyan"></div>
+            <div key={idx} className={`relative ${direction === 'rtl' ? 'pr-8' : 'pl-8'}`}>
+              <div className={`absolute ${direction === 'rtl' ? '-right-[9px]' : '-left-[9px]'} top-1 w-4 h-4 rounded-full bg-nova-900 border-2 border-nova-cyan`}></div>
               <div className="bg-nova-800/50 p-3 rounded border border-nova-700/50 hover:border-nova-cyan/30 transition-colors">
                 <div className="flex justify-between items-start mb-1">
-                  <span className="text-xs font-mono text-nova-cyan">STEP {step.step.toString().padStart(2, '0')}</span>
+                  <span className="text-xs font-mono text-nova-cyan">{t.workflow.step} {(idx + 1).toString().padStart(2, '0')}</span>
                   <span className="text-[10px] uppercase tracking-wider text-gray-500">{step.action}</span>
                 </div>
                 <div className="flex items-center gap-2 text-sm text-white">
                   <span className={`font-bold ${Array.isArray(step.from) ? 'text-purple-400' : 'text-gray-300'}`}>
                     {Array.isArray(step.from) ? 'Creation Team' : step.from}
                   </span>
-                  <ArrowRight size={14} className="text-gray-600" />
+                  <ArrowIcon size={14} className="text-gray-600" />
                   <span className={`font-bold ${Array.isArray(step.to) ? 'text-purple-400' : 'text-nova-cyan'}`}>
                     {Array.isArray(step.to) ? step.to.join(' + ') : step.to}
                   </span>
@@ -55,7 +56,6 @@ const WorkflowMonitor: React.FC<WorkflowMonitorProps> = ({ agents }) => {
            <h3 className="font-bold text-white flex items-center gap-2">
              <ShieldCheck className="text-green-400" /> EVV Quality Loop
            </h3>
-           <span className="text-xs text-gray-400 font-mono">Module 4.1 Core Logic</span>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative">
@@ -120,13 +120,13 @@ const WorkflowMonitor: React.FC<WorkflowMonitorProps> = ({ agents }) => {
           onClick={() => setActiveTab('global')}
           className={`px-4 py-2 text-sm font-bold border-b-2 transition-colors ${activeTab === 'global' ? 'border-nova-cyan text-white' : 'border-transparent text-gray-500 hover:text-gray-300'}`}
         >
-          Project Workflow (4.2)
+          {t.workflow.tabProject}
         </button>
         <button 
            onClick={() => setActiveTab('evv')}
            className={`px-4 py-2 text-sm font-bold border-b-2 transition-colors ${activeTab === 'evv' ? 'border-nova-cyan text-white' : 'border-transparent text-gray-500 hover:text-gray-300'}`}
         >
-          EVV Pipeline (4.1)
+          {t.workflow.tabEvv}
         </button>
       </div>
 

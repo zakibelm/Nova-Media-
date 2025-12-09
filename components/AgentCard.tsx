@@ -1,12 +1,15 @@
 import React from 'react';
 import { AgentDefinition } from '../types';
 import { Bot, BrainCircuit, CheckCircle2, Terminal, Briefcase, PenTool, BarChart3, ShieldCheck, Zap } from 'lucide-react';
+import { useLanguage } from '../contexts/LanguageContext';
 
 interface AgentCardProps {
   agent: AgentDefinition;
 }
 
 const AgentCard: React.FC<AgentCardProps> = ({ agent }) => {
+  const { t, direction } = useLanguage();
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'working': return 'text-nova-warning border-nova-warning bg-nova-warning/10';
@@ -30,7 +33,7 @@ const AgentCard: React.FC<AgentCardProps> = ({ agent }) => {
   return (
     <div className="bg-nova-800 border border-nova-700 rounded-xl p-5 hover:border-nova-cyan/50 transition-all duration-300 group relative overflow-hidden flex flex-col h-full">
       {/* Background decoration */}
-      <div className="absolute top-0 right-0 w-24 h-24 bg-nova-cyan/5 rounded-full blur-2xl -mr-10 -mt-10 group-hover:bg-nova-cyan/10 transition-all"></div>
+      <div className={`absolute top-0 ${direction === 'rtl' ? 'left-0 -ml-10' : 'right-0 -mr-10'} -mt-10 w-24 h-24 bg-nova-cyan/5 rounded-full blur-2xl group-hover:bg-nova-cyan/10 transition-all`}></div>
 
       <div className="flex justify-between items-start mb-4 relative z-10">
         <div className="p-2 bg-nova-900 rounded-lg border border-nova-700">
@@ -42,11 +45,11 @@ const AgentCard: React.FC<AgentCardProps> = ({ agent }) => {
       </div>
 
       <h3 className="text-lg font-bold text-white mb-1">{agent.name}</h3>
-      <p className="text-xs text-nova-cyan mb-2 font-mono">{agent.model}</p>
+      <p className="text-xs text-nova-cyan mb-2 font-mono" dir="ltr">{agent.default_model}</p>
       
       {/* Responsibilities */}
       <div className="mb-4 flex-grow">
-        <p className="text-[10px] text-gray-500 uppercase tracking-wider mb-1">Responsibilities</p>
+        <p className="text-[10px] text-gray-500 uppercase tracking-wider mb-1">{t.agents.responsibilities}</p>
         <div className="flex flex-wrap gap-1">
           {agent.responsibilities?.slice(0, 3).map((resp, i) => (
             <span key={i} className="text-[10px] bg-nova-900 text-gray-300 px-1.5 py-0.5 rounded border border-nova-700/50">
@@ -62,7 +65,7 @@ const AgentCard: React.FC<AgentCardProps> = ({ agent }) => {
       {/* IO Tags */}
       <div className="grid grid-cols-2 gap-2 mb-4 text-[10px]">
         <div>
-          <span className="text-gray-500 block mb-1">Input</span>
+          <span className="text-gray-500 block mb-1">{t.agents.input}</span>
           <div className="flex flex-wrap gap-1">
             {agent.input_required?.slice(0, 2).map((inpt, i) => (
               <span key={i} className="text-blue-300/70">{inpt}</span>
@@ -70,7 +73,7 @@ const AgentCard: React.FC<AgentCardProps> = ({ agent }) => {
           </div>
         </div>
         <div>
-           <span className="text-gray-500 block mb-1">Output</span>
+           <span className="text-gray-500 block mb-1">{t.agents.output}</span>
            <div className="flex flex-wrap gap-1">
             {agent.output?.slice(0, 2).map((out, i) => (
               <span key={i} className="text-green-300/70">{out}</span>

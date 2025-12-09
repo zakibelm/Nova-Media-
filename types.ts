@@ -1,39 +1,61 @@
+
+export type Language = 'fr' | 'en' | 'ar';
+export type Direction = 'ltr' | 'rtl';
+
+export type AgentRole = 'Direction' | 'Strategy' | 'Creation' | 'Execution' | 'Operations';
+export type AgentStatus = 'idle' | 'working' | 'waiting' | 'error' | 'success';
+
 export interface EVVConfig {
-  execute?: boolean;
-  verify?: boolean;
-  validate?: boolean;
+  execute: boolean;
+  verify: boolean;
+  validate: boolean;
 }
 
 export interface AgentDefinition {
   id: string;
   name: string;
-  role: string;
-  default_model: string;
-  default_system_prompt: string;
-  responsibilities?: string[];
-  input_required?: string[];
-  output?: string[];
-  functions?: string[];
-  evv: EVVConfig;
-  status: 'idle' | 'working' | 'offline' | 'error';
-}
-
-export interface AgentConfig {
+  role: AgentRole;
   model: string;
   systemPrompt: string;
+  default_model: string;
+  default_system_prompt: string;
+  responsibilities: string[];
+  inputs: string[];
+  outputs: string[];
+  evv: EVVConfig;
+  status?: AgentStatus; // Runtime status
+  currentTask?: string; // Runtime task
 }
 
-export interface GlobalConfig {
-  openRouterApiKey: string;
-  agentConfigs: Record<string, AgentConfig>;
-}
-
-export interface Campaign {
+export interface WorkflowStep {
   id: string;
-  title: string;
-  status: 'planning' | 'executing' | 'reviewing' | 'completed';
-  progress: number;
-  activeAgents: string[];
+  label: string;
+  from: string | string[]; // Agent ID(s)
+  to: string | string[]; // Agent ID(s)
+  action: string;
+  requiredOutput?: string;
+}
+
+export interface WorkflowDefinition {
+  id: string;
+  name: string;
+  description: string;
+  steps: WorkflowStep[];
+}
+
+export interface CampaignIntake {
+  id: string;
+  name: string;
+  description: string;
+  objective: string;
+  target: string;
+  budget: string;
+  deadline: string;
+  competitors: string;
+  references: string;
+  tone: string;
+  status: 'draft' | 'active' | 'completed';
+  createdAt: number;
 }
 
 export interface CampaignIntakeForm {
@@ -48,17 +70,23 @@ export interface CampaignIntakeForm {
   ton_et_style_souhaite: string;
 }
 
-export type ViewState = 'dashboard' | 'agents' | 'workflow' | 'settings' | 'new_campaign' | 'json_dump';
-
-export interface MetricData {
-  name: string;
-  value: number;
-  trend: number; // percentage
+export interface AgentConfig {
+  model: string;
+  systemPrompt: string;
 }
 
-export interface WorkflowStep {
+export interface GlobalConfig {
+  openRouterApiKey: string;
+  agentConfigs: Record<string, AgentConfig>;
+}
+
+export type ViewState = 'dashboard' | 'agents' | 'workflow' | 'settings' | 'new_campaign' | 'json_dump';
+
+export interface LogEntry {
   id: string;
-  label: string;
-  agents: string[];
-  next?: string[];
+  timestamp: number;
+  agentId: string;
+  level: 'info' | 'warn' | 'error' | 'success';
+  message: string;
+  details?: any;
 }

@@ -1,19 +1,13 @@
+
 import React from 'react';
-import { NOVA_AGENTS, SYSTEM_RULES, WORKFLOW_DEFINITIONS, CAMPAIGN_INITIATOR_MODULE } from '../constants';
+import { SYSTEM_RULES, CAMPAIGN_INITIATOR_MODULE } from '../constants';
+import { AGENTS_REGISTRY } from '../data/agents';
+import { WORKFLOWS_REGISTRY } from '../data/workflows';
 import { FileJson, ShieldAlert, Workflow, Sparkles } from 'lucide-react';
 
 const SystemConfig = () => {
-  const agentsJson = JSON.stringify(NOVA_AGENTS.map(a => ({
-    agent_name: a.name,
-    role: a.role,
-    default_model: a.default_model,
-    responsibilities: a.responsibilities,
-    inputs: a.input_required,
-    outputs: a.output,
-    evv: a.evv
-  })), null, 2);
-
-  const workflowJson = JSON.stringify(WORKFLOW_DEFINITIONS, null, 2);
+  const agentsJson = JSON.stringify(AGENTS_REGISTRY, null, 2);
+  const workflowJson = JSON.stringify(WORKFLOWS_REGISTRY, null, 2);
   const rulesJson = JSON.stringify(SYSTEM_RULES, null, 2);
   const initiatorJson = JSON.stringify(CAMPAIGN_INITIATOR_MODULE, null, 2);
 

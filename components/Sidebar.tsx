@@ -1,8 +1,9 @@
+
 import React from 'react';
 import { LayoutDashboard, Users, GitMerge, Settings, Activity, Command, FileJson } from 'lucide-react';
 import { ViewState, Language } from '../types';
 import { useLanguage } from '../contexts/LanguageContext';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface SidebarProps {
   currentView: ViewState;
@@ -21,17 +22,17 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, onViewChange }) => {
   ];
 
   return (
-    <div className={`w-64 h-screen bg-nova-900 ${direction === 'rtl' ? 'border-l left-auto right-0' : 'border-r left-0'} border-nova-700 flex flex-col fixed top-0 z-50 shadow-2xl`}>
+    <div className={`w-64 h-screen bg-nova-900 ${direction === 'rtl' ? 'border-l left-auto right-0' : 'border-r left-0'} border-nova-700 flex flex-col fixed top-0 z-50 shadow-2xl overflow-hidden`}>
       {/* Header with Animation */}
       <div className="p-6 flex items-center gap-3 border-b border-nova-700/50 relative overflow-hidden group">
         <motion.div 
           whileHover={{ rotate: 180, scale: 1.1 }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.5, type: 'spring' }}
           className="w-8 h-8 bg-nova-cyan rounded-md flex items-center justify-center shadow-[0_0_15px_rgba(6,182,212,0.5)] flex-shrink-0 z-10 cursor-pointer"
         >
           <Command className="text-white w-5 h-5" />
         </motion.div>
-        <div className="z-10">
+        <div className="z-10 flex flex-col items-start">
           <h1 className="text-lg font-bold text-white tracking-wide leading-none">NOVA MEDIA</h1>
           <p className="text-xs text-gray-400 font-mono mt-1">v3.0.0</p>
         </div>
@@ -46,18 +47,18 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, onViewChange }) => {
           <button
             key={lang}
             onClick={() => setLanguage(lang)}
-            className={`px-3 py-1 rounded-full text-xs font-bold uppercase transition-all duration-300 relative overflow-hidden ${
+            className={`px-3 py-1 rounded-full text-xs font-bold uppercase transition-colors duration-300 relative overflow-hidden isolate ${
               language === lang 
-              ? 'text-nova-900 shadow-[0_0_10px_rgba(6,182,212,0.4)]' 
+              ? 'text-nova-900' 
               : 'text-gray-400 hover:text-white'
             }`}
           >
             {language === lang && (
               <motion.div
-                layoutId="lang-bg"
-                className="absolute inset-0 bg-nova-cyan"
-                initial={false}
+                layoutId="lang-active-pill"
+                className="absolute inset-0 bg-nova-cyan z-[-1]"
                 transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                style={{ borderRadius: 9999 }}
               />
             )}
             <span className="relative z-10">{lang}</span>
@@ -67,53 +68,58 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, onViewChange }) => {
 
       {/* Animated Navigation */}
       <nav className="flex-1 p-4 space-y-2">
-        {menuItems.map((item) => {
-          const Icon = item.icon;
-          const isActive = currentView === item.id;
-          
-          return (
-            <button
-              key={item.id}
-              onClick={() => onViewChange(item.id as ViewState)}
-              className={`relative w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-colors duration-200 group outline-none ${
-                isActive ? 'text-nova-cyan' : 'text-gray-400 hover:text-white'
-              }`}
-            >
-              {/* The "Sliding Pill" Background */}
-              {isActive && (
-                <motion.div
-                  layoutId="menu-active-bg"
-                  className={`absolute inset-0 bg-nova-800 rounded-xl border border-nova-700/50 ${direction === 'rtl' ? 'border-r-2 border-r-nova-cyan' : 'border-l-2 border-l-nova-cyan'}`}
-                  initial={false}
-                  transition={{ 
-                    type: "spring", 
-                    stiffness: 400, 
-                    damping: 30 
-                  }}
-                />
-              )}
-
-              {/* Icon with Pop effect */}
-              <motion.div
-                animate={isActive ? { scale: 1.1 } : { scale: 1 }}
-                className="relative z-10"
+        <AnimatePresence>
+          {menuItems.map((item) => {
+            const Icon = item.icon;
+            const isActive = currentView === item.id;
+            
+            return (
+              <button
+                key={item.id}
+                onClick={() => onViewChange(item.id as ViewState)}
+                className={`relative w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-colors duration-200 group outline-none isolate ${
+                  isActive ? 'text-nova-cyan' : 'text-gray-400 hover:text-white'
+                }`}
               >
-                <Icon size={20} className={isActive ? 'text-nova-cyan drop-shadow-[0_0_8px_rgba(6,182,212,0.5)]' : 'group-hover:text-white transition-colors'} />
-              </motion.div>
-              
-              <span className="font-medium text-sm relative z-10">{item.label}</span>
-              
-              {/* Hover highlight for non-active items */}
-              {!isActive && (
-                 <div className="absolute inset-0 rounded-xl bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
-              )}
-            </button>
-          );
-        })}
+                {/* The "Sliding Pill" Background - Moves smoothly between items */}
+                {isActive && (
+                  <motion.div
+                    layoutId="menu-active-pill"
+                    className={`absolute inset-0 bg-nova-800 border border-nova-700/80 shadow-[0_0_15px_rgba(6,182,212,0.1)] z-[-1] ${direction === 'rtl' ? 'border-r-2 border-r-nova-cyan' : 'border-l-2 border-l-nova-cyan'}`}
+                    style={{ borderRadius: '0.75rem' }}
+                    initial={false}
+                    transition={{ 
+                      type: "spring", 
+                      stiffness: 300, 
+                      damping: 30,
+                      mass: 0.8
+                    }}
+                  />
+                )}
+
+                {/* Icon with Pop effect */}
+                <motion.div
+                  animate={isActive ? { scale: 1.1 } : { scale: 1 }}
+                  transition={{ duration: 0.2 }}
+                  className="relative z-10"
+                >
+                  <Icon size={20} className={isActive ? 'text-nova-cyan drop-shadow-[0_0_8px_rgba(6,182,212,0.5)]' : 'group-hover:text-white transition-colors'} />
+                </motion.div>
+                
+                <span className="font-medium text-sm relative z-10">{item.label}</span>
+                
+                {/* Hover highlight for non-active items */}
+                {!isActive && (
+                   <div className="absolute inset-0 rounded-xl bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-[-1]" />
+                )}
+              </button>
+            );
+          })}
+        </AnimatePresence>
       </nav>
 
-      <div className="p-4 border-t border-nova-700/50">
-        <div className="bg-nova-800/50 rounded-lg p-3 border border-nova-700 mb-4 backdrop-blur-sm">
+      <div className="p-4 border-t border-nova-700/50 bg-nova-900/50 backdrop-blur-md">
+        <div className="bg-nova-800/50 rounded-lg p-3 border border-nova-700 mb-4">
           <div className="flex items-center gap-2 mb-2">
             <Activity size={16} className="text-green-400" />
             <span className="text-xs font-mono text-green-400 uppercase">{t.sidebar.systemStatus}</span>

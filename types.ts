@@ -51,7 +51,6 @@ export interface CampaignIntake {
   target: string;
   budget: string;
   deadline: string;
-  competitors: string;
   references: string;
   tone: string;
   status: 'draft' | 'active' | 'completed';
@@ -64,10 +63,10 @@ export interface CampaignIntakeForm {
   objectif_marketing: string;
   marche_cible: string;
   budget: string;
-  deadline: string;
+  date_debut: string;
+  date_fin: string;
   urls_reference: string;
   ton_et_style_souhaite: string;
-  concurrents_principaux: string;
 }
 
 export interface AgentConfig {
@@ -86,7 +85,3 @@ export interface LogEntry {
   id: string;
   timestamp: number;
   agentId: string;
-  level: 'info' | 'warn' | 'error' | 'success';
-  message: string;
-  details?: any;
-}

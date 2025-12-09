@@ -32,7 +32,8 @@ export const CAMPAIGN_INITIATOR_MODULE = {
   required_fields: [
     "nom_campagne",
     "budget",
-    "deadline"
+    "date_debut",
+    "date_fin"
   ],
   route_to: "csm-01",
   validation_rules: "strict"

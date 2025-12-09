@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { CampaignIntakeForm } from '../types';
-import { Send, Sparkles, X } from 'lucide-react';
+import { Send, Sparkles, X, Calendar } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 
 interface CampaignInitiatorProps {
@@ -17,10 +17,11 @@ const CampaignInitiator: React.FC<CampaignInitiatorProps> = ({ onSubmit, onCance
     objectif_marketing: '',
     marche_cible: '',
     budget: '',
-    deadline: '',
+    date_debut: '',
+    date_fin: '',
     urls_reference: '',
     ton_et_style_souhaite: '',
-    concurrents_principaux: ''
+    // concurrents_principaux removed as requested
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -122,18 +123,34 @@ const CampaignInitiator: React.FC<CampaignInitiatorProps> = ({ onSubmit, onCance
           />
         </div>
 
-        <div>
-          <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">
-            {t.campaign.deadline}
-          </label>
-          <input
-            type="text"
-            name="deadline"
-            value={formData.deadline}
-            onChange={handleChange}
-            className="w-full bg-nova-900 border border-nova-700 rounded px-4 py-3 text-white focus:border-nova-cyan focus:outline-none transition-colors"
-            required
-          />
+        {/* Date Range Selection */}
+        <div className="flex gap-4">
+          <div className="flex-1">
+            <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 flex items-center gap-1">
+              <Calendar size={12} /> {t.campaign.startDate}
+            </label>
+            <input
+              type="date"
+              name="date_debut"
+              value={formData.date_debut}
+              onChange={handleChange}
+              className="w-full bg-nova-900 border border-nova-700 rounded px-4 py-3 text-white focus:border-nova-cyan focus:outline-none transition-colors [color-scheme:dark]"
+              required
+            />
+          </div>
+          <div className="flex-1">
+            <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 flex items-center gap-1">
+              <Calendar size={12} /> {t.campaign.endDate}
+            </label>
+            <input
+              type="date"
+              name="date_fin"
+              value={formData.date_fin}
+              onChange={handleChange}
+              className="w-full bg-nova-900 border border-nova-700 rounded px-4 py-3 text-white focus:border-nova-cyan focus:outline-none transition-colors [color-scheme:dark]"
+              required
+            />
+          </div>
         </div>
 
         <div className="md:col-span-2">
@@ -147,19 +164,6 @@ const CampaignInitiator: React.FC<CampaignInitiatorProps> = ({ onSubmit, onCance
             onChange={handleChange}
             className="w-full bg-nova-900 border border-nova-700 rounded px-4 py-3 text-white focus:border-nova-cyan focus:outline-none transition-colors"
             placeholder="https://..."
-          />
-        </div>
-
-        <div className="md:col-span-2">
-           <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">
-            {t.campaign.competitors || "CONCURRENTS / COMPETITORS"}
-          </label>
-           <input
-            type="text"
-            name="concurrents_principaux"
-            value={formData.concurrents_principaux}
-            onChange={handleChange}
-            className="w-full bg-nova-900 border border-nova-700 rounded px-4 py-3 text-white focus:border-nova-cyan focus:outline-none transition-colors"
           />
         </div>
 

@@ -54,8 +54,7 @@ export const processCampaignIntake = async (data: CampaignIntakeForm, config: Gl
             Objective: ${data.objectif_marketing}
             Target: ${data.marche_cible}
             Budget: ${data.budget}
-            Deadline: ${data.deadline}
-            Competitors: ${data.concurrents_principaux}
+            Duration: ${data.date_debut} to ${data.date_fin}
             Reference URLs: ${data.urls_reference}
             Tone: ${data.ton_et_style_souhaite}
             

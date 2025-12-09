@@ -14,7 +14,7 @@ import { useLanguage } from './contexts/LanguageContext';
 import { motion, AnimatePresence } from 'framer-motion';
 
 // Defined outside App to avoid re-creation and fix type inference
-const PageTransition = ({ children, className = "" }: { children: React.ReactNode, className?: string }) => (
+const PageTransition = ({ children, className = "" }: { children?: React.ReactNode, className?: string }) => (
   <motion.div
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}

@@ -65,9 +65,9 @@ export interface CampaignIntakeForm {
   marche_cible: string;
   budget: string;
   deadline: string;
-  concurrents_principaux: string;
   urls_reference: string;
   ton_et_style_souhaite: string;
+  concurrents_principaux: string;
 }
 
 export interface AgentConfig {

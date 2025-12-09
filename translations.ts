@@ -39,8 +39,8 @@ export const translations = {
       target: "Marché Cible",
       budget: "Budget",
       deadline: "Date Limite",
-      comp: "Concurrents Principaux",
       ref: "URLs de Référence",
+      competitors: "Concurrents Principaux",
       tone: "Ton & Style Souhaité",
       cancel: "Annuler",
       submit: "Initialiser Pipeline"
@@ -113,8 +113,8 @@ export const translations = {
       target: "Target Market",
       budget: "Budget",
       deadline: "Deadline",
-      comp: "Main Competitors",
       ref: "Reference URLs",
+      competitors: "Main Competitors",
       tone: "Desired Tone & Style",
       cancel: "Cancel",
       submit: "Initialize Pipeline"
@@ -187,8 +187,8 @@ export const translations = {
       target: "السوق المستهدف",
       budget: "الميزانية",
       deadline: "الموعد النهائي",
-      comp: "المنافسون الرئيسيون",
       ref: "روابط مرجعية",
+      competitors: "المنافسون الرئيسيون",
       tone: "النبرة والأسلوب المطلوب",
       cancel: "إلغاء",
       submit: "بدء المسار"

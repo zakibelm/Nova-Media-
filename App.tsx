@@ -11,6 +11,20 @@ import { Bot, Play, Pause, Plus, Search, Cpu, ListFilter, ArrowLeft } from 'luci
 import { orchestrator } from './services/orchestratorService';
 import { processCampaignIntake } from './services/openRouterService';
 import { useLanguage } from './contexts/LanguageContext';
+import { motion, AnimatePresence } from 'framer-motion';
+
+// Defined outside App to avoid re-creation and fix type inference
+const PageTransition = ({ children, className = "" }: { children: React.ReactNode, className?: string }) => (
+  <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    exit={{ opacity: 0, y: -20 }}
+    transition={{ duration: 0.3, ease: "easeOut" }}
+    className={`p-8 h-screen overflow-y-auto pb-20 custom-scrollbar ${className}`}
+  >
+    {children}
+  </motion.div>
+);
 
 const App = () => {
   const { t, direction } = useLanguage();
@@ -73,7 +87,7 @@ const App = () => {
     switch (currentView) {
       case 'agents':
         return (
-          <div className="p-8 pb-24 h-screen overflow-y-auto custom-scrollbar">
+          <PageTransition className="pb-24">
             <div className="flex justify-between items-center mb-8">
               <div>
                 <h2 className="text-3xl font-bold text-white mb-2">{t.agents.title}</h2>
@@ -89,16 +103,23 @@ const App = () => {
               </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {agents.map(agent => (
-                <AgentCard key={agent.id} agent={agent} />
+              {agents.map((agent, index) => (
+                <motion.div
+                  key={agent.id}
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: index * 0.05 }}
+                >
+                  <AgentCard agent={agent} />
+                </motion.div>
               ))}
             </div>
-          </div>
+          </PageTransition>
         );
 
       case 'workflow':
         return (
-          <div className="p-8 h-screen overflow-y-auto pb-20 custom-scrollbar">
+          <PageTransition>
             <div className="flex justify-between items-center mb-8">
                <div>
                 <h2 className="text-3xl font-bold text-white mb-2">{t.workflow.title}</h2>
@@ -110,33 +131,47 @@ const App = () => {
               </div>
             </div>
             <WorkflowMonitor agents={agents} />
-          </div>
+          </PageTransition>
         );
 
       case 'settings':
-        return <Settings config={globalConfig} onSave={handleSaveConfig} />;
+        return (
+          <PageTransition>
+            <Settings config={globalConfig} onSave={handleSaveConfig} />
+          </PageTransition>
+        );
 
       case 'json_dump':
-        return <SystemConfig />;
+        return (
+          <PageTransition>
+            <SystemConfig />
+          </PageTransition>
+        );
 
       case 'new_campaign':
         return (
-          <div className="p-8 h-screen overflow-y-auto pb-20 custom-scrollbar flex items-center justify-center">
+          <PageTransition className="flex items-center justify-center">
             <CampaignInitiator 
               onSubmit={handleCampaignSubmit} 
               onCancel={() => setCurrentView('dashboard')} 
             />
-          </div>
+          </PageTransition>
         );
 
       case 'dashboard':
       default:
         return (
-          <div className="p-8 h-screen overflow-y-auto pb-20 custom-scrollbar">
+          <PageTransition>
             {/* Header */}
             <div className="flex flex-col md:flex-row justify-between md:items-end mb-8 gap-4">
               <div>
-                <h2 className="text-3xl font-bold text-white mb-1">{t.dashboard.title}</h2>
+                <motion.h2 
+                  initial={{ x: -20, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  className="text-3xl font-bold text-white mb-1"
+                >
+                  {t.dashboard.title}
+                </motion.h2>
                 <p className="text-gray-400">{t.dashboard.subtitle}</p>
               </div>
               <div className="flex items-center gap-2 bg-nova-800 px-4 py-2 rounded-lg border border-nova-700">
@@ -172,14 +207,14 @@ const App = () => {
 
             {/* Metrics Grid */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-              <div className="bg-nova-800 border border-nova-700 rounded-xl p-6">
+              <div className="bg-nova-800 border border-nova-700 rounded-xl p-6 hover:border-nova-cyan/30 transition-colors">
                 <h3 className="text-white font-bold mb-4 flex justify-between">
                   <span>{t.dashboard.taskVelocity}</span>
                   <span className="text-green-400 text-xs">+12.5%</span>
                 </h3>
                 <ActivityChart />
               </div>
-              <div className="bg-nova-800 border border-nova-700 rounded-xl p-6">
+              <div className="bg-nova-800 border border-nova-700 rounded-xl p-6 hover:border-nova-cyan/30 transition-colors">
                  <h3 className="text-white font-bold mb-4 flex justify-between">
                   <span>{t.dashboard.tokenCost}</span>
                   <span className="text-gray-400 text-xs">{t.dashboard.thisWeek}</span>
@@ -198,22 +233,28 @@ const App = () => {
                  {logs.length === 0 ? (
                    <div className="p-8 text-center text-gray-500 text-sm">{t.dashboard.systemIdle}</div>
                  ) : (
-                   logs.map((log) => (
-                     <div key={log.id} className="px-6 py-3 flex items-center gap-4 text-sm hover:bg-nova-700/30 transition-colors border-b border-nova-700/30 last:border-0">
-                       <span className="text-gray-500 font-mono text-xs w-16">{new Date(log.timestamp).toLocaleTimeString([], {hour12: false, hour: '2-digit', minute:'2-digit', second:'2-digit'})}</span>
-                       <span className={`w-20 px-2 py-0.5 rounded text-[10px] font-bold border text-center ${
+                   logs.map((log, index) => (
+                     <motion.div 
+                       key={log.id} 
+                       initial={{ opacity: 0, x: -10 }}
+                       animate={{ opacity: 1, x: 0 }}
+                       transition={{ delay: index * 0.05 }}
+                       className="px-6 py-3 flex items-center gap-4 text-sm hover:bg-nova-700/30 transition-colors border-b border-nova-700/30 last:border-0"
+                     >
+                       <span className="text-gray-500 font-mono text-xs w-16 flex-shrink-0">{new Date(log.timestamp).toLocaleTimeString([], {hour12: false, hour: '2-digit', minute:'2-digit', second:'2-digit'})}</span>
+                       <span className={`w-20 px-2 py-0.5 rounded text-[10px] font-bold border text-center flex-shrink-0 ${
                          log.level === 'info' ? 'text-blue-400 border-blue-900 bg-blue-900/20' :
                          log.level === 'warn' ? 'text-yellow-400 border-yellow-900 bg-yellow-900/20' :
                          log.level === 'success' ? 'text-green-400 border-green-900 bg-green-900/20' :
                          'text-red-400 border-red-900 bg-red-900/20'
                        }`}>{log.agentId}</span>
-                       <span className="text-gray-300">{log.message}</span>
-                     </div>
+                       <span className="text-gray-300 truncate">{log.message}</span>
+                     </motion.div>
                    ))
                  )}
                </div>
             </div>
-          </div>
+          </PageTransition>
         );
     }
   };
@@ -222,7 +263,9 @@ const App = () => {
     <div className={`flex min-h-screen bg-nova-900 text-white font-sans selection:bg-nova-cyan selection:text-nova-900 ${direction === 'rtl' ? 'font-cairo' : ''}`} dir={direction}>
       <Sidebar currentView={currentView} onViewChange={setCurrentView} />
       <main className={`flex-1 h-screen relative transition-all duration-300 ${direction === 'rtl' ? 'mr-64' : 'ml-64'}`}>
-        {renderContent()}
+        <AnimatePresence mode="wait">
+          {renderContent()}
+        </AnimatePresence>
       </main>
     </div>
   );

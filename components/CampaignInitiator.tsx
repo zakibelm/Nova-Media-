@@ -18,9 +18,9 @@ const CampaignInitiator: React.FC<CampaignInitiatorProps> = ({ onSubmit, onCance
     marche_cible: '',
     budget: '',
     deadline: '',
-    concurrents_principaux: '',
     urls_reference: '',
-    ton_et_style_souhaite: ''
+    ton_et_style_souhaite: '',
+    concurrents_principaux: ''
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -138,19 +138,6 @@ const CampaignInitiator: React.FC<CampaignInitiatorProps> = ({ onSubmit, onCance
 
         <div className="md:col-span-2">
            <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">
-            {t.campaign.comp}
-          </label>
-           <input
-            type="text"
-            name="concurrents_principaux"
-            value={formData.concurrents_principaux}
-            onChange={handleChange}
-            className="w-full bg-nova-900 border border-nova-700 rounded px-4 py-3 text-white focus:border-nova-cyan focus:outline-none transition-colors"
-          />
-        </div>
-
-        <div className="md:col-span-2">
-           <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">
             {t.campaign.ref}
           </label>
            <input
@@ -160,6 +147,19 @@ const CampaignInitiator: React.FC<CampaignInitiatorProps> = ({ onSubmit, onCance
             onChange={handleChange}
             className="w-full bg-nova-900 border border-nova-700 rounded px-4 py-3 text-white focus:border-nova-cyan focus:outline-none transition-colors"
             placeholder="https://..."
+          />
+        </div>
+
+        <div className="md:col-span-2">
+           <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">
+            {t.campaign.competitors || "CONCURRENTS / COMPETITORS"}
+          </label>
+           <input
+            type="text"
+            name="concurrents_principaux"
+            value={formData.concurrents_principaux}
+            onChange={handleChange}
+            className="w-full bg-nova-900 border border-nova-700 rounded px-4 py-3 text-white focus:border-nova-cyan focus:outline-none transition-colors"
           />
         </div>
 
